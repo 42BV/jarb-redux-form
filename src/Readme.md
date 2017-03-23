@@ -1,0 +1,325 @@
+# About
+
+[JaRB](http://www.jarbframework.org/) JaRB aims to improve database 
+usage in Java enterprise applications. With JaRB you can get the
+validation rules from the database into Java. With this project
+you can get those rules into your [redux-form](http://redux-form.com/) powered
+forms as well.
+
+# Installation
+
+`npm install jarb-redux-form --save`
+
+# Preparation
+
+First in your Java project make sure jarb-redux-form can read
+the contraints, via a GET request:
+
+```Java
+// EntityConstraintsController.java
+
+@RestController
+@RequestMapping("/constraints")
+class EntityConstraintsController {
+
+    private final EntityConstraintsService constraintsService;
+
+    @Autowired
+    EntityConstraintsController(EntityConstraintsService constraintsService) {
+        this.constraintsService = constraintsService;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    Map<String, Map<String, PropertyConstraintDescription>> describeAll() {
+        return constraintsService.getAll();
+    }
+
+}
+```
+
+Next we need to define the EntityConstraintsService:
+
+```Java
+// EntityConstraintsService.java
+
+@Service
+class EntityConstraintsService {
+
+    // The properties we don't want to expose via the API because they are useless.
+    private static final List<String> IGNORED_PROPERTIES = Arrays.asList("new", "id", "class");
+
+    private final BeanConstraintDescriptor beanConstraintDescriptor;
+
+    @Autowired
+    EntityConstraintsService(BeanConstraintDescriptor beanConstraintDescriptor) {
+        this.beanConstraintDescriptor = beanConstraintDescriptor;
+    }
+
+    Map<String, Map<String, PropertyConstraintDescription>> getAll() {
+        Map<String, Map<String, PropertyConstraintDescription>> descriptions = new HashMap<>();
+        Set<Class<?>> entityClasses = ClassScanner.getAllWithAnnotation(Application.class.getPackage().getName(), Entity.class);
+        for (Class<?> entityClass : entityClasses) {
+            String entityName = entityClass.getSimpleName();
+
+            BeanConstraintDescription description = beanConstraintDescriptor.describeBean(entityClass);
+            Map<String, PropertyConstraintDescription> properties = new HashMap<>(description.getProperties());
+            IGNORED_PROPERTIES.forEach(properties::remove);
+
+            descriptions.put(entityName, properties);
+        }
+
+        return descriptions;
+    }
+
+}
+```
+
+# Getting started.
+
+We assume you have a working Redux project, if you do not yet have
+Redux add Redux to your project by following the Redux's instructions.
+
+We also assume that you have redux-form installed via the instructions
+provided on the website.
+
+First install the following dependencies in the package.json:
+
+  1. "react-redux": "5.0.3",
+  2. "redux": "3.6.0",
+  3. "redux-form": "6.5.0"
+
+Now add the constraints-reducer to your rootReducer for example:
+
+```JavaScript
+// @flow
+
+import { combineReducers } from 'redux';
+import { reducer as formReducer } from 'redux-form';
+
+import type { ConstraintsStore } from '../jarb-redux-form/constraints-reducer';
+import { constraints } from '../jarb-redux-form';
+
+export type Store = {
+  constraints: ConstraintsStore
+};
+
+// Use ES6 object literal shorthand syntax to define the object shape
+const rootReducer: Store = combineReducers({
+  constraints,
+  form: formReducer
+});
+
+export default rootReducer;
+```
+
+This should add the ConstraintsStore to Redux, which will store
+the constraints from JaRB.
+
+Next you have to configure the constraints module:
+
+```JavaScript
+import { createStore } from 'redux';
+import { configureConstraint } from './jarb-redux-form';
+
+export const store = createStore(
+  rootReducer,
+);
+
+configureConstraint({
+   // The URL which will provide the constraints over a GET request.
+  constraintsUrl: '/api/constraints',
+
+  // Whether or not the 'constraintsUrl' should be called with authentication.
+  needsAuthentication: true,
+
+  // The dispatch function for the Redux store.
+  dispatch: store.dispatch,
+
+  // A function which returns the latests ConstraintsStore from Redux.
+  constraintsStore: () => store.getState().constraints
+});
+```
+
+The constraints module must be configured before the application
+is rendered.
+
+Finally you will have load the constraints from the back-end using
+the `loadConstraints` function. If in order for the constraints
+to be loaded you need to be logged in, you should load the constraints
+as soon as you know that you are logged in:
+
+```JavaScript
+import { loadConstraints } from '../jarb-redux-form';
+
+import { login } from 'somewhere';
+
+class Login extends Component {
+  doLogin(username, password) {
+    login({ username, password })
+      .then(loadConstraints); // Load constraints ASAP
+  }
+
+  render() {
+    // Render here which calls doLogin
+  }
+}
+```
+
+If you do not need a login before you can fetch the constraints
+simply fetch them using `loadContraints` as soon as possible.
+
+# Usage
+
+## Using JarbField
+
+If you read the documentation of the redux-form libary you will know
+that you will need the `Field` Component to render form elements. This
+library simply extends `Field` by adding JaRB validation rules to it.
+
+This abstraction is called `JarbField`. JarbField wrappes 
+redux-form's Field, and adds the auto validation from the 
+ConstraintsStore. In fact it is a very thin wrapper around
+Field.
+
+It only demands one extra property called 'label' which is used
+to inform you which field was wrong, when errors occur.
+
+It also highjacks the `name` property and gives it exta meaning.
+The `name` property is used to match contraints to form elements.
+It follows the following format: {Entity}.{Property}. For example
+if you the name propertye is 'SuperHero.name' this means that
+the Field will apply the constraints for the 'name' property of
+the 'SuperHero' entity.
+
+For example:
+
+```JavaScript
+<JarbField name="SuperHero.name" label="SuperHero" component="input" type="text"/>
+```
+
+## Displaying erors
+
+Rendering the validation errors is completely up to you.
+
+The way it works is as follows, whenever an error occurs
+the `error` prop of the Field's `meta` data will contain
+an object with the following shape:
+
+```JavaScript
+{
+  // The type of error which occured
+  "type": "ERROR_MINIMUM_LENGTH",
+  // The label of the JarbField
+  "label": "Description",
+  // The value that the field possesed at the time of the error
+  "value": '',
+  // The reason why the error occured.
+  "reasons": { "minimumLength": 3 }
+}
+``` 
+
+The following `ValidationType`'s exist:
+
+```JavaScript
+export type ValidationType = 'ERROR_REQUIRED'
+                           | 'ERROR_MINIMUM_LENGTH'
+                           | 'ERROR_MAXIMUM_LENGTH'
+                           | 'ERROR_MIN_VALUE'
+                           | 'ERROR_MAX_VALUE'
+                           | 'ERROR_PATTERN';
+```
+
+Now you could create an Error Component to render the errors:
+
+```JavaScript
+// @flow
+
+import type { ValidationError } from 'jarb-redux-form';
+
+import React, { Component } from 'react';
+
+type Props = {
+  meta: {
+    invalid: boolean,
+    error: ValidationError,
+    touched: boolean
+  }
+}
+
+export default function Error(props: Props) {
+  render() {
+    const { invalid, error, touched } = props.meta;
+
+    if (invalid && touched) {
+      return <span className="error">{ errorMessage(error) }</span>;
+    }
+
+    return null;
+  }
+};
+
+// Render a nice message based on each ValidationType.
+function errorMessage(error: ValidationError): string {
+  switch(error.type) {
+    case 'ERROR_REQUIRED':
+      return `${ error.label } is required`;
+    case 'ERROR_MINIMUM_LENGTH':
+      return `${ error.label } must be bigger than ${ error.reasons.minimumLength } characters`;
+    case 'ERROR_MAXIMUM_LENGTH':
+      return `${ error.label } must be smaller than ${ error.reasons.maximumLength } characters`;
+    case 'ERROR_MIN_VALUE':
+      return `${ error.label } must be more than ${ error.reasons.minValue }`;
+    case 'ERROR_MAX_VALUE':
+      return `${ error.label } must be less than ${ error.reasons.maxValue }`;
+    case 'ERROR_PATTERN':
+      return `${ error.label } does not match the pattern: ${error.reasons.regex`;
+    default:
+     return 'UNKNOWN_ERROR';
+  }
+```
+
+Here are examples of all errors which can occur:
+
+```JavaScript
+{
+  "type": "ERROR_REQUIRED",
+  "label": "Name",
+  "value": '',
+  "reasons": { "required": "required" }
+}
+
+{
+  "type": "ERROR_MINIMUM_LENGTH",
+  "label": "Description",
+  "value": '',
+  "reasons": { "minimumLength": 3 }
+}
+
+{
+  "type": "ERROR_MAXIMUM_LENGTH",
+  "label": "Info",
+  "value": 'aaaa',
+  "reasons": { "maximumLength": 3 }
+}
+
+{
+  "type": "ERROR_MIN_VALUE",
+  "label": "Age",
+  "value": 1,
+  "reasons": { "minValue": 15 }
+}
+
+{
+  "type": "ERROR_MAX_VALUE",
+  "label": "Amount",
+  "value": 16,
+  "reasons": { "maxValue": 15 }
+}
+
+{
+  "type": "ERROR_PATTERN",
+  "label": "Telephone",
+  "value": 'noot',
+  "reasons": { "regex": /^-?\d+$/ }
+}
+```
