@@ -10,7 +10,7 @@ test('configuration lifecycle', () => {
     constraintsUrl: '/api/constraints',
     needsAuthentication: false,
     dispath: jest.fn,
-    authenticationStore: () => ({ csrfToken: 'd3add0g' })
+    constraintsStore: () => ({ empty: 'constraints' })
   };
 
   configureConstraint(config);
