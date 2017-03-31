@@ -44,6 +44,7 @@ test('minimumLength', () => {
     "reasons": { "minimumLength": 3 }
   });
 
+  expect(validator(undefined)).toBe(undefined);
   expect(validator('aaa')).toBe(undefined);
   expect(validator('aaaa')).toBe(undefined);
 });
@@ -65,6 +66,7 @@ test('maximumLength', () => {
     "reasons": { "maximumLength": 3 }
   });
 
+  expect(validator(undefined)).toBe(undefined);
   expect(validator('')).toBe(undefined);
   expect(validator('a')).toBe(undefined);
   expect(validator('aa')).toBe(undefined);
@@ -88,6 +90,7 @@ test('minValue', () => {
     "reasons": { "minValue": 15 }
   });
 
+  expect(validator(undefined)).toBe(undefined);
   expect(validator(15)).toBe(undefined);
   expect(validator(16)).toBe(undefined);
 });
@@ -109,6 +112,7 @@ test('maxValue', () => {
     "reasons": { "maxValue": 15 }
   });
 
+  expect(validator(undefined)).toBe(undefined);
   expect(validator(15)).toBe(undefined);
   expect(validator(14)).toBe(undefined);
 });
@@ -123,6 +127,7 @@ test('pattern', () => {
     "reasons": { "regex": /^-?\d+$/ }
   });
 
+  expect(validator(undefined)).toBe(undefined);
   expect(validator(15)).toBe(undefined);
   expect(validator(14)).toBe(undefined);
 });
