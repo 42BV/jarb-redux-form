@@ -17,7 +17,7 @@ import * as patterns from './regex';
 
 type Props = {
   name: string,
-  label: string,
+  jarbLabel: string,
   validate?: Array<Function>
 };
 
@@ -26,7 +26,7 @@ type Props = {
  * from the ConstraintsStore. In fact it is a very thin wrapper around
  * Field.
  *
- * It only demands one extra property called 'label' which is used
+ * It only demands one extra property called 'jarbLabel' which is used
  * to inform you which field was wrong, when error occur.
  *
  * It also highjacks the `name` property and gives it exta meaning.
@@ -38,17 +38,17 @@ type Props = {
  *
  * @example
  * ```JavaScript
- * <JarbField name="SuperHero.name" label="SuperHero" component="input" type="text"/>
+ * <JarbField name="SuperHero.name" jarbLabel="SuperHero" component="input" type="text"/>
  * ```
  *
  * @export
  * @param {Props.name} name The name of the field, must have the following format: {Entity}.{Property}
- * @param {Props.label} name The label of the field used for error handling.
+ * @param {Props.jarbLabel} name The label of the field used for error handling.
 
  * @returns
  */
 export function JarbField(props: Props) {
-  const { name, label, ...rest } = props;
+  const { name, jarbLabel, ...rest } = props;
 
   const config: Config = getConfig();
 
@@ -63,32 +63,32 @@ export function JarbField(props: Props) {
       const field: FieldType = mostSpecificInputTypeFor(fieldConstraints.types);
 
       if (fieldConstraints.required) {
-        validate.push(validators.required(label));
+        validate.push(validators.required(jarbLabel));
       }
 
       if (field === 'text') {
         if (fieldConstraints.minimumLength) {
-          validate.push(validators.minimumLength(label, fieldConstraints.minimumLength));
+          validate.push(validators.minimumLength(jarbLabel, fieldConstraints.minimumLength));
         }
 
         if (fieldConstraints.maximumLength) {
-          validate.push(validators.maximumLength(label, fieldConstraints.maximumLength));
+          validate.push(validators.maximumLength(jarbLabel, fieldConstraints.maximumLength));
         }
       }
 
       if (fieldConstraints.min) {
-        validate.push(validators.minValue(label, fieldConstraints.min));
+        validate.push(validators.minValue(jarbLabel, fieldConstraints.min));
       }
 
       if (fieldConstraints.max) {
-        validate.push(validators.maxValue(label, fieldConstraints.max));
+        validate.push(validators.maxValue(jarbLabel, fieldConstraints.max));
       }
 
       if (field === 'number' && fieldConstraints.fractionLength > 0) {
         const regex = patterns.fractionNumberRegex(fieldConstraints.fractionLength);
-        validate.push(validators.pattern(label, regex));
+        validate.push(validators.pattern(jarbLabel, regex));
       } else if (field === 'number') {
-        validate.push(validators.pattern(label, patterns.numberRegex));
+        validate.push(validators.pattern(jarbLabel, patterns.numberRegex));
       }
     }
   }
