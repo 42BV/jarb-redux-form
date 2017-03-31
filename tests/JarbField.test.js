@@ -90,7 +90,14 @@ describe('Component: JarbField', () => {
     test('use provided if exists', () => {
       setup({});
 
-      const jarbField = shallow(<JarbField name="Hero.name" jarbLabel="Name" validate={ [1, 2, 3] } component={ TestComponent } />);
+      const jarbField = shallow(
+        <JarbField 
+          name="Name"
+          jarb={{ validator: "Hero.name", label: "Name" }} 
+          validate={ [1, 2, 3] } 
+          component={ TestComponent } 
+        />
+      );
 
       const fieldProps = jarbField.find('Field').props();
       expect(fieldProps.validate).toEqual([1, 2, 3]);
@@ -99,7 +106,13 @@ describe('Component: JarbField', () => {
     test('create empty array when not defined', () => {
       setup({});
 
-      const jarbField = shallow(<JarbField name="Hero.name" jarbLabel="Name" component={ TestComponent } />);
+      const jarbField = shallow(
+        <JarbField 
+          name="Name"
+          jarb={{ validator: "Hero.name", label: "Name" }} 
+          component={ TestComponent } 
+        />
+      );
 
       const fieldProps = jarbField.find('Field').props();
       expect(fieldProps.validate).toEqual([]);
@@ -110,10 +123,17 @@ describe('Component: JarbField', () => {
     test('empty ConstraintsStore', () => {
       setup(undefined);
 
-      const jarbField = shallow(<JarbField name="Hero.name" jarbLabel="Name" validate={ [] } component={ TestComponent } />);
+      const jarbField = shallow(
+        <JarbField
+          name="Name"
+          jarb={{ validator: "Hero.name", label: "Name" }} 
+          validate={ [] } 
+          component={ TestComponent } 
+        />
+      );
 
       const fieldProps = jarbField.find('Field').props();
-      expect(fieldProps.name).toBe('Hero.name');
+      expect(fieldProps.name).toBe('Name');
       expect(fieldProps.validate).toEqual([]);
       expect(fieldProps.component).toEqual(TestComponent);
     });
@@ -121,10 +141,17 @@ describe('Component: JarbField', () => {
     test('no FieldConstraints', () => {
       setup(filledContraints);
 
-      const jarbField = shallow(<JarbField name="Hero.favoriteFood" jarbLabel="Name" validate={ [] } component={ TestComponent } />);
+      const jarbField = shallow(
+        <JarbField
+          name="FavoriteFood"
+          jarb={{ validator: "Hero.favoriteFood", label: "Name" }} 
+          validate={ [] } 
+          component={ TestComponent } 
+        />
+      );
 
       const fieldProps = jarbField.find('Field').props();
-      expect(fieldProps.name).toBe('Hero.favoriteFood');
+      expect(fieldProps.name).toBe('FavoriteFood');
       expect(fieldProps.validate).toEqual([]);
       expect(fieldProps.component).toEqual(TestComponent);
     });
@@ -134,10 +161,17 @@ describe('Component: JarbField', () => {
     test('string which is required, and has minimumLength and maximumLength', () => {
       setup(filledContraints);
 
-      const jarbField = shallow(<JarbField name="Hero.name" jarbLabel="Name" validate={ [] } component={ TestComponent } />);
+      const jarbField = shallow(
+        <JarbField 
+          name="Name"
+          jarb={{ validator: "Hero.name", label: "Name" }} 
+          validate={ [] } 
+          component={ TestComponent } 
+        />
+      );
 
       const fieldProps = jarbField.find('Field').props();
-      expect(fieldProps.name).toBe('Hero.name');
+      expect(fieldProps.name).toBe('Name');
       expect(fieldProps.validate).toEqual(['required', 'minimumLength', 'maximumLength']);
       expect(fieldProps.component).toEqual(TestComponent);
 
@@ -154,10 +188,17 @@ describe('Component: JarbField', () => {
     test('string without minimumLength and maximumLength', () => {
       setup(filledContraints);
 
-      const jarbField = shallow(<JarbField name="Hero.description" jarbLabel="Description" validate={ [] } component={ TestComponent } />);
+      const jarbField = shallow(
+        <JarbField
+          name="Description"
+          jarb={{ validator: "Hero.description", label: "Description" }} 
+          validate={ [] } 
+          component={ TestComponent } 
+        />
+      );
 
       const fieldProps = jarbField.find('Field').props();
-      expect(fieldProps.name).toBe('Hero.description');
+      expect(fieldProps.name).toBe('Description');
       expect(fieldProps.validate).toEqual([]);
       expect(fieldProps.component).toEqual(TestComponent);
 
@@ -170,10 +211,17 @@ describe('Component: JarbField', () => {
     test('number with a min and max value', () => {
       setup(filledContraints);
 
-      const jarbField = shallow(<JarbField name="Hero.age" jarbLabel="Age" validate={ [] } component={ TestComponent } />);
+      const jarbField = shallow(
+        <JarbField 
+          name="Age"
+          jarb={{ validator:"Hero.age", label: "Age" }} 
+          validate={ [] } 
+          component={ TestComponent } 
+        />
+      );
 
       const fieldProps = jarbField.find('Field').props();
-      expect(fieldProps.name).toBe('Hero.age');
+      expect(fieldProps.name).toBe('Age');
       expect(fieldProps.validate).toEqual(['minValue', 'maxValue', 'pattern']);
       expect(fieldProps.component).toEqual(TestComponent);
 
@@ -190,10 +238,17 @@ describe('Component: JarbField', () => {
     test('number with a fraction', () => {
       setup(filledContraints);
 
-      const jarbField = shallow(<JarbField name="Hero.salary" jarbLabel="Salary" validate={ [] } component={ TestComponent } />);
+      const jarbField = shallow(
+        <JarbField 
+          name="Salary"
+          jarb={{ validator: "Hero.salary", label: "Salary" }} 
+          validate={ [] } 
+          component={ TestComponent } 
+        />
+      );
 
       const fieldProps = jarbField.find('Field').props();
-      expect(fieldProps.name).toBe('Hero.salary');
+      expect(fieldProps.name).toBe('Salary');
       expect(fieldProps.validate).toEqual(['pattern']);
       expect(fieldProps.component).toEqual(TestComponent);
 

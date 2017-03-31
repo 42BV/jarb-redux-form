@@ -15,9 +15,14 @@ import type { FieldConstraints, FieldType } from './models';
 import * as validators from './validators';
 import * as patterns from './regex';
 
+type JarbProps = {
+  validator: string,
+  label: string
+}
+
 type Props = {
   name: string,
-  jarbLabel: string,
+  jarb: JarbProps,
   validate?: Array<Function>
 };
 
@@ -26,29 +31,38 @@ type Props = {
  * from the ConstraintsStore. In fact it is a very thin wrapper around
  * Field.
  *
- * It only demands one extra property called 'jarbLabel' which is used
- * to inform you which field was wrong, when error occur.
+ * It only demands one extra property called 'jarb' which is used
+ * to to configure the Field. The 'jarb' object needs two keys:
+ * the 'validator' and the 'label'. 
  *
- * It also highjacks the `name` property and gives it exta meaning.
- * The `name` property is used to match contraints to form elements.
- * It follows the following format: {Entity}.{Property}. For example
- * if you the name propertye is 'SuperHero.name' this means that
+ * The 'validator' follows the following format: {Entity}.{Property}. 
+ * For example if the validator property is 'SuperHero.name' this means that
  * the Field will apply the constraints for the 'name' property of
  * the 'SuperHero' entity.
+ * 
+ * The 'label' is used to inform you which field was wrong, when errors occur.
+ * You will receive the 'label' when an error occurs to create a nice
+ * error message.
  *
  * @example
  * ```JavaScript
- * <JarbField name="SuperHero.name" jarbLabel="SuperHero" component="input" type="text"/>
+ * <JarbField 
+ *   name="Name" 
+ *   jarb={{ validator: 'SuperHero.name', label: "Name" }} 
+ *   component="input" 
+ *   type="text"
+ * />
  * ```
  *
  * @export
  * @param {Props.name} name The name of the field, must have the following format: {Entity}.{Property}
- * @param {Props.jarbLabel} name The label of the field used for error handling.
+ * @param {Props.jarb} object Object containing the 'label' and 'validator'.
 
  * @returns
  */
 export function JarbField(props: Props) {
-  const { name, jarbLabel, ...rest } = props;
+  const { jarb, name, ...rest } = props;
+  const { label, validator } = jarb;
 
   const config: Config = getConfig();
 
@@ -57,41 +71,41 @@ export function JarbField(props: Props) {
   const validate = props.validate ? props.validate : [];
 
   if (constraintsStore.constraints !== undefined) {
-    const fieldConstraints: FieldConstraints | false = getFieldConstraintsFor(name, constraintsStore.constraints);
+    const fieldConstraints: FieldConstraints | false = getFieldConstraintsFor(validator, constraintsStore.constraints);
 
     if (fieldConstraints !== false) {
       const field: FieldType = mostSpecificInputTypeFor(fieldConstraints.types);
 
       if (fieldConstraints.required) {
-        validate.push(validators.required(jarbLabel));
+        validate.push(validators.required(label));
       }
 
       if (field === 'text') {
         if (fieldConstraints.minimumLength) {
-          validate.push(validators.minimumLength(jarbLabel, fieldConstraints.minimumLength));
+          validate.push(validators.minimumLength(label, fieldConstraints.minimumLength));
         }
 
         if (fieldConstraints.maximumLength) {
-          validate.push(validators.maximumLength(jarbLabel, fieldConstraints.maximumLength));
+          validate.push(validators.maximumLength(label, fieldConstraints.maximumLength));
         }
       }
 
       if (fieldConstraints.min) {
-        validate.push(validators.minValue(jarbLabel, fieldConstraints.min));
+        validate.push(validators.minValue(label, fieldConstraints.min));
       }
 
       if (fieldConstraints.max) {
-        validate.push(validators.maxValue(jarbLabel, fieldConstraints.max));
+        validate.push(validators.maxValue(label, fieldConstraints.max));
       }
 
       if (field === 'number' && fieldConstraints.fractionLength > 0) {
         const regex = patterns.fractionNumberRegex(fieldConstraints.fractionLength);
-        validate.push(validators.pattern(jarbLabel, regex));
+        validate.push(validators.pattern(label, regex));
       } else if (field === 'number') {
-        validate.push(validators.pattern(jarbLabel, patterns.numberRegex));
+        validate.push(validators.pattern(label, patterns.numberRegex));
       }
     }
   }
 
-  return <Field name={ name } validate={ validate } {...rest}/>;
+  return <Field name={ name } validate={ validate } { ...rest }/>;
 }
