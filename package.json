@@ -21,7 +21,7 @@
     "url": "https://github.com/42BV/jarb-redux-form/issues"
   },
   "homepage": "https://github.com/42BV/jarb-redux-form#readme",
-  "dependencies": {
+  "peerDependencies": {
     "react-redux": "^5.0.3",
     "redux": "^3.6.0",
     "redux-form": "^6.5.0"
