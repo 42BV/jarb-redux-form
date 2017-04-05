@@ -181,20 +181,28 @@ redux-form's Field, and adds the auto validation from the
 ConstraintsStore. In fact it is a very thin wrapper around
 Field.
 
-It only demands one extra property called 'label' which is used
-to inform you which field was wrong, when errors occur.
+It only demands one extra property called 'jarb' which is used
+to to configure the Field. The 'jarb' object needs two keys:
+the 'validator' and the 'label'. 
 
-It also highjacks the `name` property and gives it exta meaning.
-The `name` property is used to match contraints to form elements.
-It follows the following format: {Entity}.{Property}. For example
-if you the name propertye is 'SuperHero.name' this means that
+The 'validator' follows the following format: {Entity}.{Property}. 
+For example if the validator property is 'SuperHero.name' this means that
 the Field will apply the constraints for the 'name' property of
 the 'SuperHero' entity.
+ 
+The 'label' is used to inform you which field was wrong, when errors occur.
+You will receive the 'label' when an error occurs to create a nice
+error message.
 
 For example:
 
 ```JavaScript
-<JarbField name="SuperHero.name" label="SuperHero" component="input" type="text"/>
+<JarbField 
+  name="Name" 
+  jarb={{ validator: 'SuperHero.name', label: "Name" }} 
+  component="input" 
+  type="text"
+/>
 ```
 
 ## Displaying erors
