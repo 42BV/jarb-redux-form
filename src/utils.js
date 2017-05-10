@@ -62,9 +62,8 @@ export function mostSpecificInputTypeFor(types: Array<FieldType>): FieldType {
  * @returns {FieldConstraints | false} The constraints for the specific field
  */
 export function getFieldConstraintsFor(validator: string, constraints: Constraints): FieldConstraints | false {
-  const parts = validator.split('.');
-
-  const [className, propertyName] = parts;
+  const [className] = validator.split('.', 1);
+  const propertyName = validator.substring(className.length + 1);
 
   const classConstraints: ConstraintModel = constraints[className];
 

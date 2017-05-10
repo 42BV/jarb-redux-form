@@ -36,6 +36,19 @@ test('getFieldConstraintsFor', () => {
         "min": null,
         "max": null,
         "name": "email"
+      },
+      "address.city": {
+        "javaType": "java.lang.String",
+        "types": ["text"],
+        "required": true,
+        "minimumLength": null,
+        "maximumLength": 1337,
+        "fractionLength": null,
+        "radix": null,
+        "pattern": null,
+        "min": null,
+        "max": null,
+        "name": "address.city"
       }
     }
   };
@@ -55,5 +68,19 @@ test('getFieldConstraintsFor', () => {
     "min": null,
     "max": null,
     "name": "email"
+  });
+
+  expect(getFieldConstraintsFor('SuperHero.address.city', constraints)).toEqual({
+    "javaType": "java.lang.String",
+    "types": ["text"],
+    "required": true,
+    "minimumLength": null,
+    "maximumLength": 1337,
+    "fractionLength": null,
+    "radix": null,
+    "pattern": null,
+    "min": null,
+    "max": null,
+    "name": "address.city"
   });
 });

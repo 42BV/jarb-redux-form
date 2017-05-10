@@ -20,57 +20,19 @@ the contraints, via a GET request:
 
 @RestController
 @RequestMapping("/constraints")
-class EntityConstraintsController {
-
-    private final EntityConstraintsService constraintsService;
+public class ConstraintsController {
+    private final BeanConstraintService beanConstraintService;
 
     @Autowired
-    EntityConstraintsController(EntityConstraintsService constraintsService) {
-        this.constraintsService = constraintsService;
+    ConstraintsController(BeanConstraintDescriptor beanConstraintDescriptor) {
+        beanConstraintService = new BeanConstraintService(beanConstraintDescriptor);
+        beanConstraintService.registerAllWithAnnotation(Application.class, Entity.class);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     Map<String, Map<String, PropertyConstraintDescription>> describeAll() {
-        return constraintsService.getAll();
+        return beanConstraintService.describeAll();
     }
-
-}
-```
-
-Next we need to define the EntityConstraintsService:
-
-```Java
-// EntityConstraintsService.java
-
-@Service
-class EntityConstraintsService {
-
-    // The properties we don't want to expose via the API because they are useless.
-    private static final List<String> IGNORED_PROPERTIES = Arrays.asList("new", "id", "class");
-
-    private final BeanConstraintDescriptor beanConstraintDescriptor;
-
-    @Autowired
-    EntityConstraintsService(BeanConstraintDescriptor beanConstraintDescriptor) {
-        this.beanConstraintDescriptor = beanConstraintDescriptor;
-    }
-
-    Map<String, Map<String, PropertyConstraintDescription>> getAll() {
-        Map<String, Map<String, PropertyConstraintDescription>> descriptions = new HashMap<>();
-        Set<Class<?>> entityClasses = ClassScanner.getAllWithAnnotation(Application.class.getPackage().getName(), Entity.class);
-        for (Class<?> entityClass : entityClasses) {
-            String entityName = entityClass.getSimpleName();
-
-            BeanConstraintDescription description = beanConstraintDescriptor.describeBean(entityClass);
-            Map<String, PropertyConstraintDescription> properties = new HashMap<>(description.getProperties());
-            IGNORED_PROPERTIES.forEach(properties::remove);
-
-            descriptions.put(entityName, properties);
-        }
-
-        return descriptions;
-    }
-
 }
 ```
 
