@@ -1,16 +1,14 @@
 // @flow
 
-type Action = {
-  type: string,
-  payload: any
-};
-
 import type { Constraints } from './models';
+
+export type Action = 
+  | { type: 'JARB_REDUX_FORM.SET_CONSTRAINTS', constraints: Constraints };
 
 export const SET_CONSTRAINTS = 'SET_CONSTRAINTS';
 
 export type ConstraintsStore = {
-  constraints?: Constraints,
+  +constraints?: Constraints,
 };
 
 export const initialState: ConstraintsStore = {
@@ -19,8 +17,8 @@ export const initialState: ConstraintsStore = {
 
 export function constraints(state: ConstraintsStore = initialState, action: Action): ConstraintsStore {
   switch(action.type) {
-    case SET_CONSTRAINTS: {
-      return { ...state, constraints: action.payload.constraints };
+    case 'JARB_REDUX_FORM.SET_CONSTRAINTS': {
+      return { ...state, constraints: action.constraints };
     }
 
     default: {
@@ -30,5 +28,5 @@ export function constraints(state: ConstraintsStore = initialState, action: Acti
 }
 
 export function setConstraints(constraints: Constraints): Action {
-  return { type: SET_CONSTRAINTS, payload: { constraints } };
+  return { type: 'JARB_REDUX_FORM.SET_CONSTRAINTS', constraints };
 }

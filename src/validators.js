@@ -1,11 +1,12 @@
 // @flow
 
-export type ValidationType = 'ERROR_REQUIRED'
-                           | 'ERROR_MINIMUM_LENGTH'
-                           | 'ERROR_MAXIMUM_LENGTH'
-                           | 'ERROR_MIN_VALUE'
-                           | 'ERROR_MAX_VALUE'
-                           | 'ERROR_PATTERN';
+export type ValidationType = 
+  | 'ERROR_REQUIRED'
+  | 'ERROR_MINIMUM_LENGTH'
+  | 'ERROR_MAXIMUM_LENGTH'
+  | 'ERROR_MIN_VALUE'
+  | 'ERROR_MAX_VALUE'
+  | 'ERROR_PATTERN';
 
 export type ValidationError = {
   type: ValidationType,
@@ -14,7 +15,7 @@ export type ValidationError = {
   reasons: Object
 };
 
-export function required(label: string): typeof undefined | ValidationError {
+export function required(label: string): (value: string | typeof undefined) => ?ValidationError {
   return(value: string | typeof undefined) => {
     if (value === undefined || value === '') {
       return {
@@ -31,7 +32,7 @@ export function required(label: string): typeof undefined | ValidationError {
   };
 }
 
-export function minimumLength(label: string, minimumLength: number): typeof undefined | ValidationError {
+export function minimumLength(label: string, minimumLength: number): (value: string | typeof undefined) => ?ValidationError {
   return (value: string | typeof undefined) => {
     if (value !== undefined && value.length < minimumLength) {
       return {
@@ -48,7 +49,7 @@ export function minimumLength(label: string, minimumLength: number): typeof unde
   };
 }
 
-export function maximumLength(label: string, maximumLength: number): typeof undefined | ValidationError {
+export function maximumLength(label: string, maximumLength: number): (value: string | typeof undefined) => ?ValidationError {
   return (value: string | typeof undefined) => {
     if (value !== undefined && value.length > maximumLength) {
       return {
@@ -65,7 +66,7 @@ export function maximumLength(label: string, maximumLength: number): typeof unde
   };
 }
 
-export function minValue(label: string, minValue: number): typeof undefined | ValidationError {
+export function minValue(label: string, minValue: number): (value: number | typeof undefined) => ?ValidationError {
   return (value: number | typeof undefined) => {
     if (value !== undefined && value < minValue) {
       return {
@@ -82,7 +83,7 @@ export function minValue(label: string, minValue: number): typeof undefined | Va
   };
 }
 
-export function maxValue(label: string, maxValue: number): typeof undefined | ValidationError {
+export function maxValue(label: string, maxValue: number): (value: number | typeof undefined) => ?ValidationError {
   return (value: number | typeof undefined) => {
     if (value !== undefined && value > maxValue) {
       return {
@@ -99,7 +100,7 @@ export function maxValue(label: string, maxValue: number): typeof undefined | Va
   };
 }
 
-export function pattern(label: string, regex: RegExp): typeof undefined | ValidationError {
+export function pattern(label: string, regex: RegExp): (value: number | typeof undefined) => ?ValidationError {
   return (value: number | typeof undefined) => {
     if (value !== undefined && regex.test(`${value}`) === false) {
       return {

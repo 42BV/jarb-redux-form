@@ -1,6 +1,6 @@
 // @flow
 
-import type { ConstraintsStore } from './constraints-reducer';
+import type { ConstraintsStore, Action } from './constraints-reducer';
 
 export type Config = {
   // The URL which will provide the constraints over a GET request.
@@ -10,7 +10,7 @@ export type Config = {
   needsAuthentication: boolean,
 
   // The dispatch function for the Redux store.
-  dispatch: () => void,
+  dispatch: (action: Action) => void,
 
   // A function which returns the latests ConstraintsStore from Redux.
   constraintsStore: () => ConstraintsStore
