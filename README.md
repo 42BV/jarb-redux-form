@@ -1,5 +1,8 @@
 # About
 
+[![Build Status](https://travis-ci.org/42BV/jarb-redux-form.svg?branch=master)](https://travis-ci.org/42BV/jarb-redux-form)
+[![Codecov](https://codecov.io/gh/42BV/jarb-redux-form/branch/master/graph/badge.svg)](https://codecov.io/gh/42BV/jarb-redux-form)
+
 [JaRB](http://www.jarbframework.org/) JaRB aims to improve database 
 usage in Java enterprise applications. With JaRB you can get the
 validation rules from the database into Java. With this project
