@@ -11,6 +11,13 @@ test('required', () => {
     "reasons": { "required": "required" }
   });
 
+  expect(validator(null)).toEqual({
+    "type": "ERROR_REQUIRED",
+    "label": "Name",
+    "value": null,
+    "reasons": { "required": "required" }
+  });
+
   expect(validator('')).toEqual({
     "type": "ERROR_REQUIRED",
     "label": "Name",
@@ -45,6 +52,7 @@ test('minimumLength', () => {
   });
 
   expect(validator(undefined)).toBe(undefined);
+  expect(validator(null)).toBe(undefined);
   expect(validator('aaa')).toBe(undefined);
   expect(validator('aaaa')).toBe(undefined);
 });
@@ -67,6 +75,7 @@ test('maximumLength', () => {
   });
 
   expect(validator(undefined)).toBe(undefined);
+  expect(validator(null)).toBe(undefined);
   expect(validator('')).toBe(undefined);
   expect(validator('a')).toBe(undefined);
   expect(validator('aa')).toBe(undefined);
@@ -91,6 +100,7 @@ test('minValue', () => {
   });
 
   expect(validator(undefined)).toBe(undefined);
+  expect(validator(null)).toBe(undefined);
   expect(validator(15)).toBe(undefined);
   expect(validator(16)).toBe(undefined);
 });
@@ -113,6 +123,7 @@ test('maxValue', () => {
   });
 
   expect(validator(undefined)).toBe(undefined);
+  expect(validator(null)).toBe(undefined);
   expect(validator(15)).toBe(undefined);
   expect(validator(14)).toBe(undefined);
 });
@@ -128,6 +139,7 @@ test('pattern', () => {
   });
 
   expect(validator(undefined)).toBe(undefined);
+  expect(validator(null)).toBe(undefined);
   expect(validator(15)).toBe(undefined);
   expect(validator(14)).toBe(undefined);
 });
