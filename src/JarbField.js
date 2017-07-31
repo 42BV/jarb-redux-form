@@ -105,6 +105,8 @@ export function JarbField(props: Props) {
         validate.push(validators.pattern(label, patterns.numberRegex));
       }
     }
+  } else {
+    console.warn('jarb-redux-form: constraints are empty, but a JarbField was rendered, this should not occur, make sure the constraints are loaded before the form is displayed. See: https://github.com/42BV/jarb-redux-form/issues/3');
   }
 
   return <Field name={ name } validate={ validate } { ...rest }/>;
