@@ -166,6 +166,9 @@ describe('Component: JarbField', () => {
       expect(fieldProps.name).toBe('FavoriteFood');
       expect(fieldProps.validate).toEqual([]);
       expect(fieldProps.component).toEqual(TestComponent);
+
+      expect(console.warn).toHaveBeenCalledTimes(1);
+      expect(console.warn).toHaveBeenCalledWith('jarb-redux-form: constaints for "Hero.favoriteFood" not found, but a JarbField was rendered, this should not occur, check your validator. See: https://github.com/42BV/jarb-redux-form/issues/4');
     });
   });
 
