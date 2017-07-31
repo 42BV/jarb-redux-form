@@ -104,6 +104,8 @@ export function JarbField(props: Props) {
       } else if (field === 'number') {
         validate.push(validators.pattern(label, patterns.numberRegex));
       }
+    } else {
+      console.warn(`jarb-redux-form: constaints for "${validator}" not found, but a JarbField was rendered, this should not occur, check your validator. See: https://github.com/42BV/jarb-redux-form/issues/4`);
     }
   } else {
     console.warn('jarb-redux-form: constraints are empty, but a JarbField was rendered, this should not occur, make sure the constraints are loaded before the form is displayed. See: https://github.com/42BV/jarb-redux-form/issues/3');
