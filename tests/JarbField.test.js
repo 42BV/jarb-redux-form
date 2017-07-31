@@ -67,6 +67,15 @@ const filledContraints = Object.freeze({
 });
 
 describe('Component: JarbField', () => {
+  const warn = console.warn;
+
+  beforeEach(() => {
+     jest.spyOn(console, 'warn').mockImplementation();
+  });
+
+  afterEach(() => {
+    console.warn = warn;
+  });
 
   function setup(constraints) {
     validators.required = jest.fn(() => 'required');
@@ -136,6 +145,9 @@ describe('Component: JarbField', () => {
       expect(fieldProps.name).toBe('Name');
       expect(fieldProps.validate).toEqual([]);
       expect(fieldProps.component).toEqual(TestComponent);
+
+      expect(console.warn).toHaveBeenCalledTimes(1);
+      expect(console.warn).toHaveBeenCalledWith('jarb-redux-form: constraints are empty, but a JarbField was rendered, this should not occur, make sure the constraints are loaded before the form is displayed. See: https://github.com/42BV/jarb-redux-form/issues/3');
     });
 
     test('no FieldConstraints', () => {
