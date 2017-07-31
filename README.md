@@ -55,14 +55,14 @@ First install the following dependencies in the package.json:
 
 Now add the constraints-reducer to your rootReducer for example:
 
-```JavaScript
+```js
 // @flow
 
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import type { ConstraintsStore } from '../jarb-redux-form/constraints-reducer';
-import { constraints } from '../jarb-redux-form';
+import type { ConstraintsStore } from 'jarb-redux-form';
+import { constraints } from 'jarb-redux-form';
 
 export type Store = {
   constraints: ConstraintsStore
@@ -82,9 +82,9 @@ the constraints from JaRB.
 
 Next you have to configure the constraints module:
 
-```JavaScript
+```js
 import { createStore } from 'redux';
-import { configureConstraint } from './jarb-redux-form';
+import { configureConstraint } from 'jarb-redux-form';
 
 export const store = createStore(
   rootReducer,
@@ -113,8 +113,8 @@ the `loadConstraints` function. If in order for the constraints
 to be loaded you need to be logged in, you should load the constraints
 as soon as you know that you are logged in:
 
-```JavaScript
-import { loadConstraints } from '../jarb-redux-form';
+```js
+import { loadConstraints } from 'jarb-redux-form';
 
 import { login } from 'somewhere';
 
@@ -161,7 +161,7 @@ error message.
 
 For example:
 
-```JavaScript
+```js
 <JarbField 
   name="Name" 
   jarb={{ validator: 'SuperHero.name', label: "Name" }} 
@@ -178,7 +178,7 @@ The way it works is as follows, whenever an error occurs
 the `error` prop of the Field's `meta` data will contain
 an object with the following shape:
 
-```JavaScript
+```js
 {
   // The type of error which occured
   "type": "ERROR_MINIMUM_LENGTH",
@@ -204,7 +204,7 @@ export type ValidationType = 'ERROR_REQUIRED'
 
 Now you could create an Error Component to render the errors:
 
-```JavaScript
+```js
 // @flow
 
 import type { ValidationError } from 'jarb-redux-form';
@@ -253,7 +253,7 @@ function errorMessage(error: ValidationError): string {
 
 Here are examples of all errors which can occur:
 
-```JavaScript
+```js
 {
   "type": "ERROR_REQUIRED",
   "label": "Name",
