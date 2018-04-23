@@ -15,7 +15,8 @@ export type ValidationError = {
   reasons: Object
 };
 
-export function required(label: string): (value: ?string ) => ?ValidationError {
+export type RequiredValidator = (value: ?string ) => ?ValidationError;
+export function required(label: string): RequiredValidator {
   return(value: ?string) => {
     if (value == null || value === '') {
       return {
@@ -32,7 +33,8 @@ export function required(label: string): (value: ?string ) => ?ValidationError {
   };
 }
 
-export function minimumLength(label: string, minimumLength: number): (value: ?string) => ?ValidationError {
+export type MinimumLengthValidator = (value: ?string) => ?ValidationError;
+export function minimumLength(label: string, minimumLength: number): MinimumLengthValidator {
   return (value: ?string) => {
     if (value != null && value.length < minimumLength) {
       return {
@@ -49,7 +51,8 @@ export function minimumLength(label: string, minimumLength: number): (value: ?st
   };
 }
 
-export function maximumLength(label: string, maximumLength: number): (value: ?string) => ?ValidationError {
+export type MaximumLengthValidator = (value: ?string) => ?ValidationError;
+export function maximumLength(label: string, maximumLength: number): MaximumLengthValidator {
   return (value: ?string) => {
     if (value != null && value.length > maximumLength) {
       return {
@@ -66,7 +69,8 @@ export function maximumLength(label: string, maximumLength: number): (value: ?st
   };
 }
 
-export function minValue(label: string, minValue: number): (value: ?number) => ?ValidationError {
+export type MinValueValidator = (value: ?number) => ?ValidationError;
+export function minValue(label: string, minValue: number): MinValueValidator {
   return (value: ?number) => {
     if (value != null && value < minValue) {
       return {
@@ -83,7 +87,8 @@ export function minValue(label: string, minValue: number): (value: ?number) => ?
   };
 }
 
-export function maxValue(label: string, maxValue: number): (value: ?number) => ?ValidationError {
+export type MaxValueValidator = (value: ?number) => ?ValidationError;
+export function maxValue(label: string, maxValue: number): MaxValueValidator {
   return (value: ?number) => {
     if (value != null && value > maxValue) {
       return {
@@ -100,8 +105,9 @@ export function maxValue(label: string, maxValue: number): (value: ?number) => ?
   };
 }
 
-export function pattern(label: string, regex: RegExp): (value: ?number) => ?ValidationError {
-  return (value: ?number) => {
+export type PatternValidator = (value?: string | number | null) => ?ValidationError;
+export function pattern(label: string, regex: RegExp): PatternValidator {
+  return (value?: string | number | null) => {
     if (value != null && regex.test(`${value}`) === false) {
       return {
         type: 'ERROR_PATTERN',

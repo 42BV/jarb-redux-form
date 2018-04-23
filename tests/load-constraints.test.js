@@ -1,3 +1,4 @@
+// @flow
 
 import fetchMock from 'fetch-mock';
 
@@ -16,7 +17,7 @@ describe('ConstraintsService', () => {
     constraintsStore = () => ({ });
 
     // Mock the action creators
-    actions.setConstraints = jest.fn(() => 'setConstraints');
+    spyOn(actions, 'setConstraints').and.returnValue('setConstraints');
 
     configureConstraint({
       constraintsUrl: '/api/constraints',
@@ -31,7 +32,7 @@ describe('ConstraintsService', () => {
   });
 
   describe('loadConstraints', () => {
-    test('200 with authentication', async () => {
+    test('200 with authentication', async (done) => {
       setup({ needsAuthentication: true });
 
       fetchMock.get('/api/constraints', { fake: 'constraints' }, {
@@ -45,9 +46,11 @@ describe('ConstraintsService', () => {
 
       expect(actions.setConstraints).toHaveBeenCalledTimes(1);
       expect(actions.setConstraints).toHaveBeenCalledWith({ fake: 'constraints' });
+
+      done();
     });
 
-    test('200 without authentication', async () => {
+    test('200 without authentication', async (done) => {
       setup({ needsAuthentication: false });
 
       fetchMock.get('/api/constraints', { fake: 'constraints' }, {});
@@ -59,19 +62,22 @@ describe('ConstraintsService', () => {
 
       expect(actions.setConstraints).toHaveBeenCalledTimes(1);
       expect(actions.setConstraints).toHaveBeenCalledWith({ fake: 'constraints' });
+
+      done();
     });
 
-    test('500', async () => {
+    test('500', async (done) => {
       setup({ needsAuthentication: false });
 
       fetchMock.get('/api/constraints', 500);
 
       try {
         const data = await loadConstraints();
-        fail();
+        done.fail();
       } catch(response) {
         expect(dispatch).toHaveBeenCalledTimes(0);
         expect(actions.setConstraints).toHaveBeenCalledTimes(0);
+        done();
       }
     });
   });

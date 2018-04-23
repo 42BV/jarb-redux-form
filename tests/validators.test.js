@@ -1,5 +1,6 @@
+// @flow
 
-import { required, minValue, maxValue, empty, minimumLength, maximumLength, pattern } from '../src/validators';
+import { required, minValue, maxValue, minimumLength, maximumLength, pattern } from '../src/validators';
 
 test('required', () => {
   const validator = required('Name');
