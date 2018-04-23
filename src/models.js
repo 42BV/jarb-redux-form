@@ -18,17 +18,16 @@ export type FieldType = 'color'
 
 export type FieldConstraints = {
   javaType: string,
-     "javaType": string,
-     "types": Array<FieldType>,
-     "required": boolean,
-     "minimumLength": number,
-     "maximumLength": number,
-     "fractionLength": number,
-     "radix": number,
-     "pattern": null,
-     "min": number,
-     "max": number,
-     "name": string
+  types: Array<FieldType>,
+  required: boolean | null,
+  minimumLength: number | null,
+  maximumLength: number | null,
+  fractionLength: number | null,
+  radix: number | null,
+  pattern: string | null,
+  min: number | null,
+  max: number | null,
+  name: string
 }
 
 export type ConstraintModel = {
@@ -78,7 +77,7 @@ export type ConstraintModel = {
  *   "required":true,             // Wether or not the validator is required.
  *   "minimumLength":int,         // Minimum length of the input string.
  *   "maximumLength":int,         // Maximum length of the input string.
- *   "fractionLength":int,        // The number of nubmers after the dot if input is a number.
+ *   "fractionLength":int,        // The number of numbers after the dot if input is a number.
  *   "radix": int,                // Radix for the when type is number: @See http://en.wikipedia.org/wiki/Radix. Is not used.
  *   "pattern": string,           // The regex in Java form the input must be valid for. Is not used.
  *   "min": int,                  // The maximum int value, is not used.

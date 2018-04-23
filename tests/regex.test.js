@@ -1,3 +1,4 @@
+// @flow
 
 import { fractionNumberRegex, numberRegex } from '../src/regex';
 

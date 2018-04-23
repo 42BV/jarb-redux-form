@@ -1,3 +1,4 @@
+// @flow
 
 import { mostSpecificInputTypeFor, getFieldConstraintsFor } from '../src/utils';
 

@@ -1,3 +1,4 @@
+// @flow
 
 import { configureConstraint, getConfig } from '../src/config';
 
@@ -9,7 +10,7 @@ test('configuration lifecycle', () => {
   const config = {
     constraintsUrl: '/api/constraints',
     needsAuthentication: false,
-    dispath: jest.fn,
+    dispatch: jest.fn(),
     constraintsStore: () => ({ empty: 'constraints' })
   };
 

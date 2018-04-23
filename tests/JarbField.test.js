@@ -1,3 +1,4 @@
+// @flow
 
 import React from 'react';
 import { shallow } from 'enzyme';
@@ -70,22 +71,23 @@ describe('Component: JarbField', () => {
   const warn = console.warn;
 
   beforeEach(() => {
-     jest.spyOn(console, 'warn').mockImplementation();
+    spyOn(console, 'warn');
   });
 
   afterEach(() => {
+    // $FlowFixMe
     console.warn = warn;
   });
 
   function setup(constraints) {
-    validators.required = jest.fn(() => 'required');
-    validators.minimumLength = jest.fn(() => 'minimumLength');
-    validators.maximumLength = jest.fn(() => 'maximumLength');
-    validators.minValue = jest.fn(() => 'minValue');
-    validators.maxValue = jest.fn(() => 'maxValue');
-    validators.pattern = jest.fn(() => 'pattern');
+    spyOn(validators, 'required').and.returnValue('required');
+    spyOn(validators, 'minimumLength').and.returnValue('minimumLength');
+    spyOn(validators, 'maximumLength').and.returnValue('maximumLength');
+    spyOn(validators, 'minValue').and.returnValue('minValue');
+    spyOn(validators, 'maxValue').and.returnValue('maxValue');
+    spyOn(validators, 'pattern').and.returnValue('pattern');
 
-    patterns.fractionNumberRegex = jest.fn(() => 'fractionNumberRegex');
+    spyOn(patterns, 'fractionNumberRegex').and.returnValue('fractionNumberRegex');
 
     configureConstraint({
       constraintsUrl: '/api/constraints',
@@ -99,17 +101,19 @@ describe('Component: JarbField', () => {
     test('use provided if exists', () => {
       setup({});
 
+      const validator = jest.fn();
+
       const jarbField = shallow(
         <JarbField 
           name="Name"
           jarb={{ validator: "Hero.name", label: "Name" }} 
-          validate={ [1, 2, 3] } 
+          validate={ [validator] } 
           component={ TestComponent } 
         />
       );
 
       const fieldProps = jarbField.find('Field').props();
-      expect(fieldProps.validate).toEqual([1, 2, 3]);
+      expect(fieldProps.validate).toEqual([validator]);
     });
 
     test('create empty array when not defined', () => {
@@ -185,6 +189,9 @@ describe('Component: JarbField', () => {
         />
       );
 
+      // Trigger the render again to check if it re-uses the validators correctly.
+      jarbField.setState({});
+
       const fieldProps = jarbField.find('Field').props();
       expect(fieldProps.name).toBe('Name');
       expect(fieldProps.validate).toEqual(['required', 'minimumLength', 'maximumLength']);
@@ -235,6 +242,9 @@ describe('Component: JarbField', () => {
         />
       );
 
+      // Trigger the render again to check if it re-uses the validators correctly.
+      jarbField.setState({});
+
       const fieldProps = jarbField.find('Field').props();
       expect(fieldProps.name).toBe('Age');
       expect(fieldProps.validate).toEqual(['minValue', 'maxValue', 'pattern']);
@@ -262,6 +272,9 @@ describe('Component: JarbField', () => {
         />
       );
 
+      // Trigger the render again to check if it re-uses the validators correctly.
+      jarbField.setState({});
+
       const fieldProps = jarbField.find('Field').props();
       expect(fieldProps.name).toBe('Salary');
       expect(fieldProps.validate).toEqual(['pattern']);
@@ -276,6 +289,8 @@ describe('Component: JarbField', () => {
   });
 });
 
-function TestComponent() {
-  return <h1>Hello World</h1>
+class TestComponent extends React.Component<{}> {
+  render() {
+    return <h1>Hello World</h1>;
+  }
 }
