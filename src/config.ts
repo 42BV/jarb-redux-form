@@ -1,20 +1,18 @@
-// @flow
+import { ConstraintsStore, Action } from './constraints-reducer';
 
-import type { ConstraintsStore, Action } from './constraints-reducer';
-
-export type Config = {
+export interface Config {
   // The URL which will provide the constraints over a GET request.
-  constraintsUrl: string,
+  constraintsUrl: string;
 
   // Whether or not the 'constraintsUrl' should be called with authentication.
-  needsAuthentication: boolean,
+  needsAuthentication: boolean;
 
   // The dispatch function for the Redux store.
-  dispatch: (action: Action) => void,
+  dispatch: (action: Action) => void;
 
   // A function which returns the latests ConstraintsStore from Redux.
-  constraintsStore: () => ConstraintsStore
-};
+  constraintsStore: () => ConstraintsStore;
+}
 
 let config: Config | null = null;
 
@@ -23,7 +21,7 @@ let config: Config | null = null;
  *
  * @param {Config} The new configuration
  */
-export function configureConstraint(c: Config) {
+export function configureConstraint(c: Config): void {
   config = c;
 }
 

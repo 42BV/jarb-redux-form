@@ -1,9 +1,7 @@
-// @flow
-
-import type { FieldType, Constraints, ConstraintModel, FieldConstraints } from './models';
+import { FieldType, Constraints, ConstraintModel, FieldConstraints } from './models';
 
 // List of <input> types sorted on most specific first.
-const inputTypes: Array<FieldType> = [
+const inputTypes: FieldType[] = [
   'color',
   'datetime-local',
   'datetime',
@@ -18,7 +16,7 @@ const inputTypes: Array<FieldType> = [
   'password',
   'file',
   'image',
-  'text'
+  'text',
 ];
 
 /**
@@ -29,7 +27,7 @@ const inputTypes: Array<FieldType> = [
  * @param  {Array<string>} The types you want the closest type for.
  * @return {FieldType} The closest <input> type, based on the types parameter.
  */
-export function mostSpecificInputTypeFor(types: Array<FieldType>): FieldType {
+export function mostSpecificInputTypeFor(types: FieldType[]): FieldType {
   // Default to the last inputType which should be 'text'.
   let index = inputTypes.length - 1;
 

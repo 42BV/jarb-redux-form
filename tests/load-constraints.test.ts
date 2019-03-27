@@ -1,20 +1,17 @@
-// @flow
-
 import fetchMock from 'fetch-mock';
 
-import { loadConstraints } from '../src/load-constraints'
-
+import { loadConstraints } from '../src/load-constraints';
 import { configureConstraint } from '../src/config';
-
 import * as actions from '../src/constraints-reducer';
 
 describe('ConstraintsService', () => {
-  let dispatch;
-  let constraintsStore;
+  let dispatch: VoidFunction;
+  let constraintsStore: () => () => actions.ConstraintsStore;
 
-  function setup({ needsAuthentication }) {
+  function setup({ needsAuthentication }: { needsAuthentication: boolean }): void {
     dispatch = jest.fn();
-    constraintsStore = () => ({ });
+    // @ts-ignore
+    constraintsStore = () => ({});
 
     // Mock the action creators
     spyOn(actions, 'setConstraints').and.returnValue('setConstraints');
@@ -23,23 +20,29 @@ describe('ConstraintsService', () => {
       constraintsUrl: '/api/constraints',
       needsAuthentication,
       dispatch,
-      constraintsStore
+      // @ts-ignore
+      constraintsStore,
     });
-  };
+  }
 
   afterEach(() => {
     fetchMock.restore();
   });
 
   describe('loadConstraints', () => {
-    test('200 with authentication', async (done) => {
+    test('200 with authentication', async done => {
       setup({ needsAuthentication: true });
 
-      fetchMock.get('/api/constraints', { fake: 'constraints' }, {
-        credentials: 'include'
-      });
+      fetchMock.get(
+        '/api/constraints',
+        { fake: 'constraints' },
+        {
+          // @ts-ignore
+          credentials: 'include',
+        },
+      );
 
-      const data = await loadConstraints();
+      await loadConstraints();
 
       expect(dispatch).toHaveBeenCalledTimes(1);
       expect(dispatch).toHaveBeenCalledWith('setConstraints');
@@ -50,12 +53,12 @@ describe('ConstraintsService', () => {
       done();
     });
 
-    test('200 without authentication', async (done) => {
+    test('200 without authentication', async done => {
       setup({ needsAuthentication: false });
 
       fetchMock.get('/api/constraints', { fake: 'constraints' }, {});
 
-      const data = await loadConstraints();
+      await loadConstraints();
 
       expect(dispatch).toHaveBeenCalledTimes(1);
       expect(dispatch).toHaveBeenCalledWith('setConstraints');
@@ -66,15 +69,15 @@ describe('ConstraintsService', () => {
       done();
     });
 
-    test('500', async (done) => {
+    test('500', async done => {
       setup({ needsAuthentication: false });
 
       fetchMock.get('/api/constraints', 500);
 
       try {
-        const data = await loadConstraints();
+        await loadConstraints();
         done.fail();
-      } catch(response) {
+      } catch (response) {
         expect(dispatch).toHaveBeenCalledTimes(0);
         expect(actions.setConstraints).toHaveBeenCalledTimes(0);
         done();

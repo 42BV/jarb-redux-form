@@ -1,38 +1,35 @@
-// @flow
+export type FieldType =
+  | 'color'
+  | 'datetime-local'
+  | 'datetime'
+  | 'month'
+  | 'week'
+  | 'date'
+  | 'time'
+  | 'email'
+  | 'tel'
+  | 'number'
+  | 'url'
+  | 'password'
+  | 'file'
+  | 'image'
+  | 'text';
 
-export type FieldType = 'color'
-                      | 'datetime-local'
-                      | 'datetime'
-                      | 'month'
-                      | 'week'
-                      | 'date'
-                      | 'time'
-                      | 'email'
-                      | 'tel'
-                      | 'number'
-                      | 'url'
-                      | 'password'
-                      | 'file'
-                      | 'image'
-                      | 'text';
-
-export type FieldConstraints = {
-  javaType: string,
-  types: Array<FieldType>,
-  required: boolean | null,
-  minimumLength: number | null,
-  maximumLength: number | null,
-  fractionLength: number | null,
-  radix: number | null,
-  pattern: string | null,
-  min: number | null,
-  max: number | null,
-  name: string
+export interface FieldConstraints {
+  javaType: string;
+  types: FieldType[];
+  required: boolean | null;
+  minimumLength: number | null;
+  maximumLength: number | null;
+  fractionLength: number | null;
+  radix: number | null;
+  pattern: string | null;
+  min: number | null;
+  max: number | null;
+  name: string;
 }
 
-export type ConstraintModel = {
-  [key: string]: FieldConstraints
-}
+export type ConstraintModel = Record<string, FieldConstraints>;
 
 /**
  * The constraints should have the following signature:
@@ -86,7 +83,9 @@ export type ConstraintModel = {
  * }
  *
  */
-export type Constraints = {
-  [key: string]: ConstraintModel
+export interface Constraints {
+  [key: string]: ConstraintModel;
 }
 
+export type ReadonlyConstraints = DeepReadonly<Constraints>;
+type DeepReadonly<T> = { readonly [K in keyof T]: DeepReadonly<T[K]> };

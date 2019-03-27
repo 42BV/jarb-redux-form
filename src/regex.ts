@@ -1,5 +1,3 @@
-// @flow
-
 /**
  * Returns a regex that checks if the it is a valid number
  * which can have fractions. Which are the numbers behind

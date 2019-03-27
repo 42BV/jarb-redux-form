@@ -1,17 +1,16 @@
-// @flow
-
-import { configureConstraint, getConfig } from '../src/config';
+import { Config, configureConstraint, getConfig } from '../src/config';
 
 test('configuration lifecycle', () => {
   // When not initialized it should throw an error.
   expect(() => getConfig()).toThrow('The constraint service is not initialized.');
 
   // Next we initialize the config.
-  const config = {
+  const config: Config = {
     constraintsUrl: '/api/constraints',
     needsAuthentication: false,
     dispatch: jest.fn(),
-    constraintsStore: () => ({ empty: 'constraints' })
+    // @ts-ignore
+    constraintsStore: () => ({ empty: 'constraints' }),
   };
 
   configureConstraint(config);
