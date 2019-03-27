@@ -1,7 +1,14 @@
-
 import { setConstraints } from './constraints-reducer';
-
 import { getConfig } from './config';
+
+// Throw error when not 200 otherwise parse response.
+function tryParse(response: Response): Promise<any> {
+  if (response.status !== 200) {
+    throw response;
+  } else {
+    return response.json();
+  }
+}
 
 /**
  * Loads the constraints from the back-end.
@@ -52,23 +59,11 @@ import { getConfig } from './config';
  *
  * @returns {Promise}
  */
-export function loadConstraints(): Promise<*> {
+export async function loadConstraints(): Promise<any> {
   const { constraintsUrl, needsAuthentication, dispatch } = getConfig();
+  const config: RequestInit = needsAuthentication ? { credentials: 'include' } : {};
 
-  const config = needsAuthentication ? { credentials: 'include'} : {};
-
-  return fetch(constraintsUrl, config)
-    .then(tryParse)
-    .then((constraints) => {
-      dispatch(setConstraints(constraints));
-    });
-}
-
-// Throw error when not 200 otherwise parse response.
-function tryParse(response: Response) {
-  if (response.status !== 200) {
-    throw response;
-  } else {
-    return response.json();
-  }
+  const response = await fetch(constraintsUrl, config);
+  const constraints = await tryParse(response);
+  dispatch(setConstraints(constraints));
 }

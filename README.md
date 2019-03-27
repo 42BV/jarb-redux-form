@@ -49,20 +49,16 @@ provided on the website.
 
 First install the following dependencies in the package.json:
 
-  1. "react-redux": "5.0.3",
+  1. "react-redux": "^6.0.0",
   2. "redux": "3.6.0",
-  3. "redux-form": "6.5.0"
+  3. "redux-form": "^8.1.0"
 
 Now add the constraints-reducer to your rootReducer for example:
 
 ```js
-// @flow
-
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
-
-import type { ConstraintsStore } from 'jarb-redux-form';
-import { constraints } from 'jarb-redux-form';
+import { constraints, ConstraintsStore } from 'jarb-redux-form';
 
 export type Store = {
   constraints: ConstraintsStore
@@ -115,7 +111,6 @@ as soon as you know that you are logged in:
 
 ```js
 import { loadConstraints } from 'jarb-redux-form';
-
 import { login } from 'somewhere';
 
 class Login extends Component {
@@ -205,13 +200,10 @@ export type ValidationType = 'ERROR_REQUIRED'
 Now you could create an Error Component to render the errors:
 
 ```js
-// @flow
-
-import type { ValidationError } from 'jarb-redux-form';
-
+import { ValidationError } from 'jarb-redux-form';
 import React, { Component } from 'react';
 
-type Props = {
+interface Props {
   meta: {
     invalid: boolean,
     error: ValidationError,
@@ -249,6 +241,7 @@ function errorMessage(error: ValidationError): string {
     default:
      return 'UNKNOWN_ERROR';
   }
+}
 ```
 
 Here are examples of all errors which can occur:

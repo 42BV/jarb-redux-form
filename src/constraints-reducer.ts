@@ -1,22 +1,22 @@
-// @flow
+import { Constraints } from './models';
 
-import type { Constraints } from './models';
-
-export type Action = 
-  | { type: 'JARB_REDUX_FORM.SET_CONSTRAINTS', constraints: Constraints };
+export interface Action {
+  type: 'JARB_REDUX_FORM.SET_CONSTRAINTS';
+  constraints: Constraints;
+}
 
 export const SET_CONSTRAINTS = 'SET_CONSTRAINTS';
 
-export type ConstraintsStore = {
-  +constraints?: Constraints,
-};
+export interface ConstraintsStore {
+  constraints?: Constraints;
+}
 
 export const initialState: ConstraintsStore = {
   constraints: undefined,
 };
 
 export function constraints(state: ConstraintsStore = initialState, action: Action): ConstraintsStore {
-  switch(action.type) {
+  switch (action.type) {
     case 'JARB_REDUX_FORM.SET_CONSTRAINTS': {
       return { ...state, constraints: action.constraints };
     }

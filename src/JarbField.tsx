@@ -1,35 +1,33 @@
-
-// @flow
-
 import * as React from 'react';
 import { Field } from 'redux-form';
 
-import { getConfig } from './config';
-import type { Config } from './config';
-
+import { Config, getConfig } from './config';
 import { getFieldConstraintsFor, mostSpecificInputTypeFor } from './utils';
-
-import type { ConstraintsStore } from './constraints-reducer';
-import type { FieldConstraints, FieldType } from './models';
-
+import { ConstraintsStore } from './constraints-reducer';
+import { FieldConstraints, FieldType } from './models';
 import * as validators from './validators';
-import type { RequiredValidator, MinimumLengthValidator, MaximumLengthValidator, MinValueValidator, MaxValueValidator, PatternValidator } from './validators';
-
+import {
+  RequiredValidator,
+  MinimumLengthValidator,
+  MaximumLengthValidator,
+  MinValueValidator,
+  MaxValueValidator,
+  PatternValidator,
+} from './validators';
 import * as patterns from './regex';
 
-type JarbProps = {
-  validator: string,
-  label: string
+interface JarbProps {
+  validator: string;
+  label: string;
 }
 
-type Props = {
-  name: string,
-  component: React.ComponentType<*> | string,
-  jarb: JarbProps, 
-  validate?: Array<Function>
-};
-
-type State = { };
+interface Props {
+  name: string;
+  // TODO: Might be too free, it is currently too complex to define proper type. WrappedFieldProps in 'redux-form'.
+  component: React.ComponentType<any> | 'input' | 'select' | 'textarea';
+  jarb: JarbProps;
+  validate?: Function[];
+}
 
 /**
  * JarbField wrappes redux-form's Field, and adds the auto validation
@@ -65,27 +63,27 @@ type State = { };
 
  * @returns
  */
-export class JarbField extends React.Component<Props, State> {
+export class JarbField extends React.Component<Props, {}> {
+  public requiredValidator: RequiredValidator | null = null;
+  public minimumLengthValidator: MinimumLengthValidator | null = null;
+  public maximumLengthValidator: MaximumLengthValidator | null = null;
+  public minValueValidator: MinValueValidator | null = null;
+  public maxValueValidator: MaxValueValidator | null = null;
+  public patternValidator: PatternValidator | null = null;
 
-  requiredValidator: RequiredValidator | null = null;
-  minimumLengthValidator: MinimumLengthValidator | null = null;
-  maximumLengthValidator: MaximumLengthValidator | null = null;
-  minValueValidator: MinValueValidator | null = null;
-  maxValueValidator: MaxValueValidator | null = null;
-  patternValidator: PatternValidator | null = null;
-
-  getEnhancedValidate(): Array<Function> {
-    const { jarb } = this.props; 
+  public getEnhancedValidate(): Function[] {
+    const { jarb, validate } = this.props;
     const { label, validator } = jarb;
 
     const config: Config = getConfig();
-
     const constraintsStore: ConstraintsStore = config.constraintsStore();
-
-    const enhancedValidate = this.props.validate ? [...this.props.validate] : [];
+    const enhancedValidate = Array.isArray(validate) && validate ? [...validate] : [];
 
     if (constraintsStore.constraints !== undefined) {
-      const fieldConstraints: FieldConstraints | false = getFieldConstraintsFor(validator, constraintsStore.constraints);
+      const fieldConstraints: FieldConstraints | false = getFieldConstraintsFor(
+        validator,
+        constraintsStore.constraints,
+      );
 
       if (fieldConstraints !== false) {
         const field: FieldType = mostSpecificInputTypeFor(fieldConstraints.types);
@@ -94,7 +92,7 @@ export class JarbField extends React.Component<Props, State> {
           if (this.requiredValidator === null) {
             this.requiredValidator = validators.required(label);
           }
-          
+
           enhancedValidate.push(this.requiredValidator);
         }
 
@@ -135,31 +133,35 @@ export class JarbField extends React.Component<Props, State> {
         if (field === 'number' && fieldConstraints.fractionLength && fieldConstraints.fractionLength > 0) {
           if (this.patternValidator === null) {
             const regex = patterns.fractionNumberRegex(fieldConstraints.fractionLength);
-            this.patternValidator = validators.pattern(label, regex)
+            this.patternValidator = validators.pattern(label, regex);
           }
 
           enhancedValidate.push(this.patternValidator);
         } else if (field === 'number') {
           if (this.patternValidator === null) {
-            this.patternValidator = validators.pattern(label, patterns.numberRegex)
+            this.patternValidator = validators.pattern(label, patterns.numberRegex);
           }
 
           enhancedValidate.push(this.patternValidator);
         }
       } else {
-        console.warn(`jarb-redux-form: constaints for "${validator}" not found, but a JarbField was rendered, this should not occur, check your validator. See: https://github.com/42BV/jarb-redux-form/issues/4`);
+        console.warn(
+          `jarb-redux-form: constraints for "${validator}" not found, but a JarbField was rendered, this should not occur, check your validator. See: https://github.com/42BV/jarb-redux-form/issues/4`,
+        );
       }
     } else {
-      console.warn('jarb-redux-form: constraints are empty, but a JarbField was rendered, this should not occur, make sure the constraints are loaded before the form is displayed. See: https://github.com/42BV/jarb-redux-form/issues/3');
+      console.warn(
+        'jarb-redux-form: constraints are empty, but a JarbField was rendered, this should not occur, make sure the constraints are loaded before the form is displayed. See: https://github.com/42BV/jarb-redux-form/issues/3',
+      );
     }
 
     return enhancedValidate;
   }
 
-  render() {
+  public render(): React.ReactNode {
     const { name, validate, ...rest } = this.props;
     const enhancedValidate = this.getEnhancedValidate();
 
-    return <Field name={ name } validate={ enhancedValidate } { ...rest }/>;
+    return <Field name={name} validate={enhancedValidate} {...rest} />;
   }
 }
