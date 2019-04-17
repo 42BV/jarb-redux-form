@@ -1,6 +1,6 @@
 {
   "name": "jarb-redux-form",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Validating forms through JaRB.",
   "files": [
     "lib"
