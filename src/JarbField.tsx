@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Field } from 'redux-form';
+import React, { Component, ComponentType } from 'react';
+import { Field, BaseFieldProps, WrappedFieldProps } from 'redux-form';
 
 import { Config, getConfig } from './config';
 import { getFieldConstraintsFor, mostSpecificInputTypeFor } from './utils';
@@ -16,17 +16,14 @@ import {
 } from './validators';
 import * as patterns from './regex';
 
-interface JarbProps {
+export interface JarbProps {
   validator: string;
   label: string;
 }
 
-interface Props {
-  name: string;
-  // TODO: Might be too free, it is currently too complex to define proper type. WrappedFieldProps in 'redux-form'.
-  component: React.ComponentType<any> | 'input' | 'select' | 'textarea';
+export interface JarbFieldProps<P> extends BaseFieldProps<P> {
   jarb: JarbProps;
-  validate?: Function[];
+  component?: ComponentType<WrappedFieldProps & P>;
 }
 
 /**
@@ -63,7 +60,7 @@ interface Props {
 
  * @returns
  */
-export class JarbField extends React.Component<Props, {}> {
+export class JarbField<P> extends Component<JarbFieldProps<P>> {
   public requiredValidator: RequiredValidator | null = null;
   public minimumLengthValidator: MinimumLengthValidator | null = null;
   public maximumLengthValidator: MaximumLengthValidator | null = null;
@@ -182,7 +179,7 @@ export class JarbField extends React.Component<Props, {}> {
     return enhancedValidate;
   }
 
-  public render(): React.ReactNode {
+  public render() {
     const { name, validate, ...rest } = this.props;
     const enhancedValidate = this.getEnhancedValidate();
 

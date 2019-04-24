@@ -6,9 +6,9 @@ import { JarbField } from '../src/JarbField';
 import * as validators from '../src/validators';
 import * as patterns from '../src/regex';
 import { ReadonlyConstraints } from '../src/models';
-import { Field } from 'redux-form';
+import { Field, WrappedFieldProps } from 'redux-form';
 
-class TestComponent extends React.Component<{}> {
+class TestComponent extends React.Component<WrappedFieldProps> {
   public render(): React.ReactNode {
     return <h1>Hello World</h1>;
   }

@@ -1,6 +1,6 @@
 {
   "name": "jarb-redux-form",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Validating forms through JaRB.",
   "files": [
     "lib"
@@ -45,8 +45,8 @@
     "fetch-mock": "7.3.1",
     "jest": "24.5.0",
     "prettier": "1.16.4",
-    "react": "16.3.2",
-    "react-dom": "16.3.2",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
     "react-redux": "5.0.7",
     "redux": "3.6.0",
     "redux-form": "7.3.0",
