@@ -12,7 +12,7 @@ import {
   MaximumLengthValidator,
   MinValueValidator,
   MaxValueValidator,
-  PatternValidator,
+  PatternValidator
 } from './validators';
 import * as patterns from './regex';
 
@@ -77,16 +77,19 @@ export class JarbField extends React.Component<Props, {}> {
 
     const config: Config = getConfig();
     const constraintsStore: ConstraintsStore = config.constraintsStore();
-    const enhancedValidate = Array.isArray(validate) && validate ? [...validate] : [];
+    const enhancedValidate =
+      Array.isArray(validate) && validate ? [...validate] : [];
 
     if (constraintsStore.constraints !== undefined) {
       const fieldConstraints: FieldConstraints | false = getFieldConstraintsFor(
         validator,
-        constraintsStore.constraints,
+        constraintsStore.constraints
       );
 
       if (fieldConstraints !== false) {
-        const field: FieldType = mostSpecificInputTypeFor(fieldConstraints.types);
+        const field: FieldType = mostSpecificInputTypeFor(
+          fieldConstraints.types
+        );
 
         if (fieldConstraints.required) {
           if (this.requiredValidator === null) {
@@ -99,7 +102,10 @@ export class JarbField extends React.Component<Props, {}> {
         if (field === 'text') {
           if (fieldConstraints.minimumLength) {
             if (this.minimumLengthValidator === null) {
-              this.minimumLengthValidator = validators.minimumLength(label, fieldConstraints.minimumLength);
+              this.minimumLengthValidator = validators.minimumLength(
+                label,
+                fieldConstraints.minimumLength
+              );
             }
 
             enhancedValidate.push(this.minimumLengthValidator);
@@ -107,7 +113,10 @@ export class JarbField extends React.Component<Props, {}> {
 
           if (fieldConstraints.maximumLength) {
             if (this.maximumLengthValidator === null) {
-              this.maximumLengthValidator = validators.maximumLength(label, fieldConstraints.maximumLength);
+              this.maximumLengthValidator = validators.maximumLength(
+                label,
+                fieldConstraints.maximumLength
+              );
             }
 
             enhancedValidate.push(this.maximumLengthValidator);
@@ -116,7 +125,10 @@ export class JarbField extends React.Component<Props, {}> {
 
         if (fieldConstraints.min) {
           if (this.minValueValidator === null) {
-            this.minValueValidator = validators.minValue(label, fieldConstraints.min);
+            this.minValueValidator = validators.minValue(
+              label,
+              fieldConstraints.min
+            );
           }
 
           enhancedValidate.push(this.minValueValidator);
@@ -124,34 +136,46 @@ export class JarbField extends React.Component<Props, {}> {
 
         if (fieldConstraints.max) {
           if (this.maxValueValidator === null) {
-            this.maxValueValidator = validators.maxValue(label, fieldConstraints.max);
+            this.maxValueValidator = validators.maxValue(
+              label,
+              fieldConstraints.max
+            );
           }
 
           enhancedValidate.push(this.maxValueValidator);
         }
 
-        if (field === 'number' && fieldConstraints.fractionLength && fieldConstraints.fractionLength > 0) {
+        if (
+          field === 'number' &&
+          fieldConstraints.fractionLength &&
+          fieldConstraints.fractionLength > 0
+        ) {
           if (this.patternValidator === null) {
-            const regex = patterns.fractionNumberRegex(fieldConstraints.fractionLength);
+            const regex = patterns.fractionNumberRegex(
+              fieldConstraints.fractionLength
+            );
             this.patternValidator = validators.pattern(label, regex);
           }
 
           enhancedValidate.push(this.patternValidator);
         } else if (field === 'number') {
           if (this.patternValidator === null) {
-            this.patternValidator = validators.pattern(label, patterns.numberRegex);
+            this.patternValidator = validators.pattern(
+              label,
+              patterns.numberRegex
+            );
           }
 
           enhancedValidate.push(this.patternValidator);
         }
       } else {
         console.warn(
-          `jarb-redux-form: constraints for "${validator}" not found, but a JarbField was rendered, this should not occur, check your validator. See: https://github.com/42BV/jarb-redux-form/issues/4`,
+          `jarb-redux-form: constraints for "${validator}" not found, but a JarbField was rendered, this should not occur, check your validator. See: https://github.com/42BV/jarb-redux-form/issues/4`
         );
       }
     } else {
       console.warn(
-        'jarb-redux-form: constraints are empty, but a JarbField was rendered, this should not occur, make sure the constraints are loaded before the form is displayed. See: https://github.com/42BV/jarb-redux-form/issues/3',
+        'jarb-redux-form: constraints are empty, but a JarbField was rendered, this should not occur, make sure the constraints are loaded before the form is displayed. See: https://github.com/42BV/jarb-redux-form/issues/3'
       );
     }
 

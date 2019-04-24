@@ -19,8 +19,8 @@ test('mostSpecificInputTypeFor', () => {
       'password',
       'file',
       'image',
-      'text',
-    ]),
+      'text'
+    ])
   ).toBe('color');
   expect(
     mostSpecificInputTypeFor([
@@ -38,8 +38,8 @@ test('mostSpecificInputTypeFor', () => {
       'month',
       'datetime',
       'datetime-local',
-      'color',
-    ]),
+      'color'
+    ])
   ).toBe('color');
   expect(mostSpecificInputTypeFor(['color', 'text'])).toBe('color');
 });
@@ -58,7 +58,7 @@ test('getFieldConstraintsFor', () => {
         pattern: null,
         min: null,
         max: null,
-        name: 'name',
+        name: 'name'
       },
       email: {
         javaType: 'java.lang.String',
@@ -71,7 +71,7 @@ test('getFieldConstraintsFor', () => {
         pattern: null,
         min: null,
         max: null,
-        name: 'email',
+        name: 'email'
       },
       'address.city': {
         javaType: 'java.lang.String',
@@ -84,13 +84,15 @@ test('getFieldConstraintsFor', () => {
         pattern: null,
         min: null,
         max: null,
-        name: 'address.city',
-      },
-    },
+        name: 'address.city'
+      }
+    }
   };
 
   expect(getFieldConstraintsFor('Villain.email', constraints)).toBe(false);
-  expect(getFieldConstraintsFor('SuperHero.secrectIdentity', constraints)).toBe(false);
+  expect(getFieldConstraintsFor('SuperHero.secrectIdentity', constraints)).toBe(
+    false
+  );
 
   expect(getFieldConstraintsFor('SuperHero.email', constraints)).toEqual({
     javaType: 'java.lang.String',
@@ -103,20 +105,22 @@ test('getFieldConstraintsFor', () => {
     pattern: null,
     min: null,
     max: null,
-    name: 'email',
+    name: 'email'
   });
 
-  expect(getFieldConstraintsFor('SuperHero.address.city', constraints)).toEqual({
-    javaType: 'java.lang.String',
-    types: ['text'],
-    required: true,
-    minimumLength: null,
-    maximumLength: 1337,
-    fractionLength: null,
-    radix: null,
-    pattern: null,
-    min: null,
-    max: null,
-    name: 'address.city',
-  });
+  expect(getFieldConstraintsFor('SuperHero.address.city', constraints)).toEqual(
+    {
+      javaType: 'java.lang.String',
+      types: ['text'],
+      required: true,
+      minimumLength: null,
+      maximumLength: 1337,
+      fractionLength: null,
+      radix: null,
+      pattern: null,
+      min: null,
+      max: null,
+      name: 'address.city'
+    }
+  );
 });

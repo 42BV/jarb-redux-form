@@ -1,5 +1,10 @@
 import { createStore, Store } from 'redux';
-import { constraints, setConstraints, initialState, ConstraintsStore } from '../src/constraints-reducer';
+import {
+  constraints,
+  setConstraints,
+  initialState,
+  ConstraintsStore
+} from '../src/constraints-reducer';
 import { ReadonlyConstraints } from '../src/models';
 
 describe('Store: ConstraintsStore', () => {
@@ -8,7 +13,7 @@ describe('Store: ConstraintsStore', () => {
     const constraintsStore = constraints(undefined, { type: 'FAKE_ACTION' });
 
     const expected = {
-      constraints: undefined,
+      constraints: undefined
     };
 
     expect(constraintsStore).toEqual(expected);
@@ -36,9 +41,9 @@ describe('Store: ConstraintsStore', () => {
             pattern: null,
             min: null,
             max: null,
-            name: 'name',
-          },
-        },
+            name: 'name'
+          }
+        }
       });
 
       store.dispatch(setConstraints(constraints));

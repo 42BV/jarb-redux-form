@@ -12,10 +12,13 @@ export interface ConstraintsStore {
 }
 
 export const initialState: ConstraintsStore = {
-  constraints: undefined,
+  constraints: undefined
 };
 
-export function constraints(state: ConstraintsStore = initialState, action: Action): ConstraintsStore {
+export function constraints(
+  state: ConstraintsStore = initialState,
+  action: Action
+): ConstraintsStore {
   switch (action.type) {
     case 'JARB_REDUX_FORM.SET_CONSTRAINTS': {
       return { ...state, constraints: action.constraints };

@@ -15,7 +15,9 @@ export interface ValidationError {
   reasons: Record<string, any>;
 }
 
-export type RequiredValidator = (value: string | null | undefined) => Maybe<ValidationError>;
+export type RequiredValidator = (
+  value: string | null | undefined
+) => Maybe<ValidationError>;
 export function required(label: string): RequiredValidator {
   return (value: string | null | undefined) => {
     if (value == null || value === '') {
@@ -24,8 +26,8 @@ export function required(label: string): RequiredValidator {
         label,
         value,
         reasons: {
-          required: 'required',
-        },
+          required: 'required'
+        }
       };
     }
 
@@ -33,8 +35,13 @@ export function required(label: string): RequiredValidator {
   };
 }
 
-export type MinimumLengthValidator = (value: string | null | undefined) => Maybe<ValidationError>;
-export function minimumLength(label: string, minimumLength: number): MinimumLengthValidator {
+export type MinimumLengthValidator = (
+  value: string | null | undefined
+) => Maybe<ValidationError>;
+export function minimumLength(
+  label: string,
+  minimumLength: number
+): MinimumLengthValidator {
   return (value: string | null | undefined) => {
     if (value != null && value.length < minimumLength) {
       return {
@@ -42,8 +49,8 @@ export function minimumLength(label: string, minimumLength: number): MinimumLeng
         label,
         value,
         reasons: {
-          minimumLength,
-        },
+          minimumLength
+        }
       };
     }
 
@@ -51,8 +58,13 @@ export function minimumLength(label: string, minimumLength: number): MinimumLeng
   };
 }
 
-export type MaximumLengthValidator = (value: string | null | undefined) => Maybe<ValidationError>;
-export function maximumLength(label: string, maximumLength: number): MaximumLengthValidator {
+export type MaximumLengthValidator = (
+  value: string | null | undefined
+) => Maybe<ValidationError>;
+export function maximumLength(
+  label: string,
+  maximumLength: number
+): MaximumLengthValidator {
   return (value: string | null | undefined) => {
     if (value != null && value.length > maximumLength) {
       return {
@@ -60,8 +72,8 @@ export function maximumLength(label: string, maximumLength: number): MaximumLeng
         label,
         value,
         reasons: {
-          maximumLength,
-        },
+          maximumLength
+        }
       };
     }
 
@@ -69,7 +81,9 @@ export function maximumLength(label: string, maximumLength: number): MaximumLeng
   };
 }
 
-export type MinValueValidator = (value: number | null | undefined) => Maybe<ValidationError>;
+export type MinValueValidator = (
+  value: number | null | undefined
+) => Maybe<ValidationError>;
 export function minValue(label: string, minValue: number): MinValueValidator {
   return (value: number | null | undefined) => {
     if (value != null && value < minValue) {
@@ -78,8 +92,8 @@ export function minValue(label: string, minValue: number): MinValueValidator {
         label,
         value,
         reasons: {
-          minValue,
-        },
+          minValue
+        }
       };
     }
 
@@ -87,7 +101,9 @@ export function minValue(label: string, minValue: number): MinValueValidator {
   };
 }
 
-export type MaxValueValidator = (value: number | null | undefined) => Maybe<ValidationError>;
+export type MaxValueValidator = (
+  value: number | null | undefined
+) => Maybe<ValidationError>;
 export function maxValue(label: string, maxValue: number): MaxValueValidator {
   return (value: number | null | undefined) => {
     if (value != null && value > maxValue) {
@@ -96,8 +112,8 @@ export function maxValue(label: string, maxValue: number): MaxValueValidator {
         label,
         value,
         reasons: {
-          maxValue,
-        },
+          maxValue
+        }
       };
     }
 
@@ -105,7 +121,9 @@ export function maxValue(label: string, maxValue: number): MaxValueValidator {
   };
 }
 
-export type PatternValidator = (value: string | number | null | undefined) => Maybe<ValidationError>;
+export type PatternValidator = (
+  value: string | number | null | undefined
+) => Maybe<ValidationError>;
 export function pattern(label: string, regex: RegExp): PatternValidator {
   return (value: string | number | null | undefined) => {
     if (value != null && regex.test(`${value}`) === false) {
@@ -114,8 +132,8 @@ export function pattern(label: string, regex: RegExp): PatternValidator {
         label,
         value,
         reasons: {
-          regex,
-        },
+          regex
+        }
       };
     }
 
