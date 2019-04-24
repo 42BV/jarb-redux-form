@@ -8,7 +8,11 @@ describe('ConstraintsService', () => {
   let dispatch: VoidFunction;
   let constraintsStore: () => () => actions.ConstraintsStore;
 
-  function setup({ needsAuthentication }: { needsAuthentication: boolean }): void {
+  function setup({
+    needsAuthentication
+  }: {
+    needsAuthentication: boolean;
+  }): void {
     dispatch = jest.fn();
     // @ts-ignore
     constraintsStore = () => ({});
@@ -21,7 +25,7 @@ describe('ConstraintsService', () => {
       needsAuthentication,
       dispatch,
       // @ts-ignore
-      constraintsStore,
+      constraintsStore
     });
   }
 
@@ -38,8 +42,8 @@ describe('ConstraintsService', () => {
         { fake: 'constraints' },
         {
           // @ts-ignore
-          credentials: 'include',
-        },
+          credentials: 'include'
+        }
       );
 
       await loadConstraints();
@@ -48,7 +52,9 @@ describe('ConstraintsService', () => {
       expect(dispatch).toHaveBeenCalledWith('setConstraints');
 
       expect(actions.setConstraints).toHaveBeenCalledTimes(1);
-      expect(actions.setConstraints).toHaveBeenCalledWith({ fake: 'constraints' });
+      expect(actions.setConstraints).toHaveBeenCalledWith({
+        fake: 'constraints'
+      });
 
       done();
     });
@@ -64,7 +70,9 @@ describe('ConstraintsService', () => {
       expect(dispatch).toHaveBeenCalledWith('setConstraints');
 
       expect(actions.setConstraints).toHaveBeenCalledTimes(1);
-      expect(actions.setConstraints).toHaveBeenCalledWith({ fake: 'constraints' });
+      expect(actions.setConstraints).toHaveBeenCalledWith({
+        fake: 'constraints'
+      });
 
       done();
     });

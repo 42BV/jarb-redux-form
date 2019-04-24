@@ -61,7 +61,9 @@ function tryParse(response: Response): Promise<any> {
  */
 export async function loadConstraints(): Promise<any> {
   const { constraintsUrl, needsAuthentication, dispatch } = getConfig();
-  const config: RequestInit = needsAuthentication ? { credentials: 'include' } : {};
+  const config: RequestInit = needsAuthentication
+    ? { credentials: 'include' }
+    : {};
 
   const response = await fetch(constraintsUrl, config);
   const constraints = await tryParse(response);

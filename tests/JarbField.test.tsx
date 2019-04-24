@@ -27,7 +27,7 @@ const filledConstraints: ReadonlyConstraints = Object.freeze({
       pattern: null,
       min: null,
       max: null,
-      name: 'name',
+      name: 'name'
     },
     description: {
       javaType: 'java.lang.String',
@@ -40,7 +40,7 @@ const filledConstraints: ReadonlyConstraints = Object.freeze({
       pattern: null,
       min: null,
       max: null,
-      name: 'description',
+      name: 'description'
     },
     age: {
       javaType: 'java.lang.Integer',
@@ -53,7 +53,7 @@ const filledConstraints: ReadonlyConstraints = Object.freeze({
       pattern: null,
       min: 16,
       max: 99,
-      name: 'age',
+      name: 'age'
     },
     salary: {
       javaType: 'java.lang.Integer',
@@ -66,9 +66,9 @@ const filledConstraints: ReadonlyConstraints = Object.freeze({
       pattern: null,
       min: null,
       max: null,
-      name: 'salary',
-    },
-  },
+      name: 'salary'
+    }
+  }
 });
 
 describe('Component: JarbField', () => {
@@ -95,13 +95,15 @@ describe('Component: JarbField', () => {
     spyOn(validators, 'maxValue').and.returnValue('maxValue');
     spyOn(validators, 'pattern').and.returnValue('pattern');
 
-    spyOn(patterns, 'fractionNumberRegex').and.returnValue('fractionNumberRegex');
+    spyOn(patterns, 'fractionNumberRegex').and.returnValue(
+      'fractionNumberRegex'
+    );
 
     configureConstraint({
       constraintsUrl: '/api/constraints',
       needsAuthentication: true,
       dispatch: jest.fn(),
-      constraintsStore: () => ({ constraints }),
+      constraintsStore: () => ({ constraints })
     });
   }
 
@@ -115,7 +117,7 @@ describe('Component: JarbField', () => {
           jarb={{ validator: 'Hero.name', label: 'Name' }}
           validate={[validator]}
           component={TestComponent}
-        />,
+        />
       );
 
       const { validate } = jarbField.find(Field).props();
@@ -126,7 +128,11 @@ describe('Component: JarbField', () => {
       setup({});
 
       const jarbField = shallow(
-        <JarbField name="Name" jarb={{ validator: 'Hero.name', label: 'Name' }} component={TestComponent} />,
+        <JarbField
+          name="Name"
+          jarb={{ validator: 'Hero.name', label: 'Name' }}
+          component={TestComponent}
+        />
       );
 
       const { validate } = jarbField.find(Field).props();
@@ -144,7 +150,7 @@ describe('Component: JarbField', () => {
           jarb={{ validator: 'Hero.name', label: 'Name' }}
           validate={[]}
           component={TestComponent}
-        />,
+        />
       );
 
       const { name, validate, component } = jarbField.find(Field).props();
@@ -154,7 +160,7 @@ describe('Component: JarbField', () => {
 
       expect(console.warn).toHaveBeenCalledTimes(1);
       expect(console.warn).toHaveBeenCalledWith(
-        'jarb-redux-form: constraints are empty, but a JarbField was rendered, this should not occur, make sure the constraints are loaded before the form is displayed. See: https://github.com/42BV/jarb-redux-form/issues/3',
+        'jarb-redux-form: constraints are empty, but a JarbField was rendered, this should not occur, make sure the constraints are loaded before the form is displayed. See: https://github.com/42BV/jarb-redux-form/issues/3'
       );
     });
 
@@ -167,7 +173,7 @@ describe('Component: JarbField', () => {
           jarb={{ validator: 'Hero.favoriteFood', label: 'Name' }}
           validate={[]}
           component={TestComponent}
-        />,
+        />
       );
 
       const { name, validate, component } = jarbField.find(Field).props();
@@ -177,7 +183,7 @@ describe('Component: JarbField', () => {
 
       expect(console.warn).toHaveBeenCalledTimes(1);
       expect(console.warn).toHaveBeenCalledWith(
-        'jarb-redux-form: constraints for "Hero.favoriteFood" not found, but a JarbField was rendered, this should not occur, check your validator. See: https://github.com/42BV/jarb-redux-form/issues/4',
+        'jarb-redux-form: constraints for "Hero.favoriteFood" not found, but a JarbField was rendered, this should not occur, check your validator. See: https://github.com/42BV/jarb-redux-form/issues/4'
       );
     });
   });
@@ -192,7 +198,7 @@ describe('Component: JarbField', () => {
           jarb={{ validator: 'Hero.name', label: 'Name' }}
           validate={[]}
           component={TestComponent}
-        />,
+        />
       );
 
       // Trigger the render again to check if it re-uses the validators correctly.
@@ -222,7 +228,7 @@ describe('Component: JarbField', () => {
           jarb={{ validator: 'Hero.description', label: 'Description' }}
           validate={[]}
           component={TestComponent}
-        />,
+        />
       );
 
       const { name, validate, component } = jarbField.find(Field).props();
@@ -239,7 +245,12 @@ describe('Component: JarbField', () => {
       setup(filledConstraints);
 
       const jarbField = shallow(
-        <JarbField name="Age" jarb={{ validator: 'Hero.age', label: 'Age' }} validate={[]} component={TestComponent} />,
+        <JarbField
+          name="Age"
+          jarb={{ validator: 'Hero.age', label: 'Age' }}
+          validate={[]}
+          component={TestComponent}
+        />
       );
 
       // Trigger the render again to check if it re-uses the validators correctly.
@@ -257,7 +268,10 @@ describe('Component: JarbField', () => {
       expect(validators.maxValue).toHaveBeenCalledWith('Age', 99);
 
       expect(validators.pattern).toHaveBeenCalledTimes(1);
-      expect(validators.pattern).toHaveBeenCalledWith('Age', patterns.numberRegex);
+      expect(validators.pattern).toHaveBeenCalledWith(
+        'Age',
+        patterns.numberRegex
+      );
     });
 
     test('number with a fraction', () => {
@@ -269,7 +283,7 @@ describe('Component: JarbField', () => {
           jarb={{ validator: 'Hero.salary', label: 'Salary' }}
           validate={[]}
           component={TestComponent}
-        />,
+        />
       );
 
       // Trigger the render again to check if it re-uses the validators correctly.
@@ -281,7 +295,10 @@ describe('Component: JarbField', () => {
       expect(component).toEqual(TestComponent);
 
       expect(validators.pattern).toHaveBeenCalledTimes(1);
-      expect(validators.pattern).toHaveBeenCalledWith('Salary', 'fractionNumberRegex');
+      expect(validators.pattern).toHaveBeenCalledWith(
+        'Salary',
+        'fractionNumberRegex'
+      );
 
       expect(patterns.fractionNumberRegex).toHaveBeenCalledTimes(1);
       expect(patterns.fractionNumberRegex).toHaveBeenCalledWith(4);

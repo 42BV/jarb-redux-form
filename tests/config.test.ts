@@ -2,7 +2,9 @@ import { Config, configureConstraint, getConfig } from '../src/config';
 
 test('configuration lifecycle', () => {
   // When not initialized it should throw an error.
-  expect(() => getConfig()).toThrow('The constraint service is not initialized.');
+  expect(() => getConfig()).toThrow(
+    'The constraint service is not initialized.'
+  );
 
   // Next we initialize the config.
   const config: Config = {
@@ -10,7 +12,7 @@ test('configuration lifecycle', () => {
     needsAuthentication: false,
     dispatch: jest.fn(),
     // @ts-ignore
-    constraintsStore: () => ({ empty: 'constraints' }),
+    constraintsStore: () => ({ empty: 'constraints' })
   };
 
   configureConstraint(config);

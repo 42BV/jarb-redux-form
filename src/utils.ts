@@ -1,4 +1,9 @@
-import { FieldType, Constraints, ConstraintModel, FieldConstraints } from './models';
+import {
+  FieldType,
+  Constraints,
+  ConstraintModel,
+  FieldConstraints
+} from './models';
 
 // List of <input> types sorted on most specific first.
 const inputTypes: FieldType[] = [
@@ -16,7 +21,7 @@ const inputTypes: FieldType[] = [
   'password',
   'file',
   'image',
-  'text',
+  'text'
 ];
 
 /**
@@ -59,7 +64,10 @@ export function mostSpecificInputTypeFor(types: FieldType[]): FieldType {
  * @throws {error} When the validator doesn't match the format 'className.fieldName'.
  * @returns {FieldConstraints | false} The constraints for the specific field
  */
-export function getFieldConstraintsFor(validator: string, constraints: Constraints): FieldConstraints | false {
+export function getFieldConstraintsFor(
+  validator: string,
+  constraints: Constraints
+): FieldConstraints | false {
   const [className] = validator.split('.', 1);
   const propertyName = validator.substring(className.length + 1);
 
